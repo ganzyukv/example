@@ -82,10 +82,11 @@ var users = map[string]string{
 
 func userInfo(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("name")
-	displayName := users[username]
+	displayName, ok := users[username]
+	if !ok {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
 
-	// Bug: displayName is "" for unknown users, but we dereference
-	// a nil *http.Request later by shadowing r.
-	var detail *http.Request
-	fmt.Fprintf(w, "User: %s, Host: %s\n", displayName, detail.Host)
+	fmt.Fprintf(w, "User: %s, Host: %s\n", displayName, r.Host)
 }
