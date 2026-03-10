@@ -1,0 +1,15 @@
+{
+  "branch": {
+    "template": "argus/fix-{{tag}}-{{short_sha}}"
+  },
+  "commit": {
+    "type": "fix",
+    "scope": "argus",
+    "subject": "fix: remediate post-deploy {{count}} incident(s) for {{tag}}",
+    "subject_max_length": 100
+  },
+  "pr": {
+    "title": "[ARGUS] fix: remediate post-deploy {{count}} incident(s) for {{tag}}",
+    "title_same_as_commit_subject": false
+  }
+}

@@ -48,6 +48,7 @@ func main() {
 	// /version is mapped specifically to version.
 	http.HandleFunc("/", greet)
 	http.HandleFunc("/version", version)
+	http.HandleFunc("/user", userInfo)
 
 	log.Printf("serving http://%s\n", *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))
@@ -72,4 +73,19 @@ func greet(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "<!DOCTYPE html>\n")
 	fmt.Fprintf(w, "%s, %s!\n", *greeting, html.EscapeString(name))
+}
+
+var users = map[string]string{
+	"alice": "Alice Smith",
+	"bob":   "Bob Jones",
+}
+
+func userInfo(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Query().Get("name")
+	displayName := users[username]
+
+	// Bug: displayName is "" for unknown users, but we dereference
+	// a nil *http.Request later by shadowing r.
+	var detail *http.Request
+	fmt.Fprintf(w, "User: %s, Host: %s\n", displayName, detail.Host)
 }
